@@ -44,6 +44,7 @@ const props = defineProps<{
   maxWidth?: string | number
   maxHeight?: string | number
   fitWidth?: boolean
+  contentClass?: string
 }>()
 
 const visible = computed(() => props.modelValue)
@@ -184,9 +185,5 @@ watch(
   color: #666;
   font-size: 18px;
   line-height: 24px;
-}
-
-.odos-autopopup-content {
-  padding: 16px 20px;
 }
 </style>
