@@ -2,7 +2,7 @@
 import Default from './default.vue'
 </script>
 
-# AutoPopup 弹出层
+# DropdownPanel 下拉面板
 
 根据内容自动调整大小的“下拉面板”，锚定到触发元素附近，无遮罩。支持外部点击关闭、自定义关闭按钮，且可通过 v-model 控制显示/隐藏。
 
