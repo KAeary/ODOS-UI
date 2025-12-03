@@ -1,5 +1,6 @@
 <script setup>
 import ModalDefault from './default.vue'
+import ModalHeaderClass from './header-class.vue'
 </script>
 
 # Modal 对话框
@@ -8,6 +9,14 @@ import ModalDefault from './default.vue'
 
 <Preview comp-name="Modal" demo-name="default">
   <ModalDefault />
+</Preview>
+
+## 自定义标题栏样式示例
+
+通过 `headerClass` 为标题栏容器绑定类名，以覆盖默认样式（演示组件引用）：
+
+<Preview comp-name="Modal" demo-name="header-class">
+  <ModalHeaderClass />
 </Preview>
 
 ## Modal API
@@ -22,6 +31,7 @@ import ModalDefault from './default.vue'
 | closeIcon    | 是否显示关闭图标     | boolean | false  |
 | bodyStyle    | 主体样式             | style   | -      |
 | bodyClass    | 主体类名             | string  | -      |
+| headerClass  | 标题栏容器类名       | string  | -      |
 
 ### Modal 事件
 

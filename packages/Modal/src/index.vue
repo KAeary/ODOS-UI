@@ -7,7 +7,7 @@
     <!-- 抽屉容器 -->
     <div class="drawer-container">
       <!-- 标题栏 -->
-      <div class="drawer-header">
+      <div class="drawer-header" :class="headerClass">
         <slot name="header">
           <div class="header-title">{{ title }}</div>
         </slot>
@@ -62,6 +62,7 @@ const props = defineProps<{
   title: string
   maskClosable?: boolean
   closeIcon?: boolean
+  headerClass?: string
   bodyClass?: string
   bodyStyle?: HTMLAttributes & ReservedProps & Record<string, unknown>
 }>()
@@ -131,11 +132,11 @@ const ok = () => {
     display: flex;
     flex-direction: column;
     z-index: 1002;
+    overflow: hidden;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 
     .drawer-header {
       flex-shrink: 0;
-      height: 50px;
       padding: 12px 16px;
       border-bottom: 1px solid #e5e6eb;
       display: flex;
