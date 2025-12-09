@@ -21,8 +21,6 @@ import {
   onMounted,
   onBeforeUnmount,
   watch,
-  defineEmits,
-  defineProps,
   ref,
   nextTick,
   type ComponentPublicInstance
