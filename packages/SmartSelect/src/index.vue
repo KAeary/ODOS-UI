@@ -253,15 +253,6 @@ const inputDisplayValue = computed(() => {
 
 // 输入框占位符
 const inputPlaceholder = computed(() => {
-  if (props.multiple) {
-    // 多选模式下，如果有搜索功能则显示搜索占位符，否则显示选择占位符
-    if (props.showSearch) {
-      return '搜索...'
-    } else if (!hasValue.value) {
-      return placeholder.value || '请选择'
-    }
-    return ''
-  }
   return placeholder.value || '请选择'
 })
 
@@ -633,10 +624,6 @@ defineExpose({
 
     &::placeholder {
       color: #86909c;
-    }
-
-    &.odos-smart-select-isTitle {
-      padding-left: 88px;
     }
 
     &[readonly] {
