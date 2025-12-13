@@ -33,6 +33,13 @@ createApp(App).use(ODOSUI).mount('#app')
 
 ### 按需导入（推荐）
 
+main.ts
+
+```ts
+// 引入样式
+import 'odos-ui/lib/umd/style.css'
+```
+
 ```vue
 <template>
   <Button type="primary">按钮</Button>
