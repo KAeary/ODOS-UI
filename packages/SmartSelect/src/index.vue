@@ -504,6 +504,9 @@ const handleOptionClick = (option: Option) => {
     hideDropdown()
   }
 
+  if (props.showSearch) {
+    searchQuery.value = ''
+  }
   emit('update:value', newValue as string | number | string[] | number[])
   emit('change', newValue as string | number | string[] | number[])
 }

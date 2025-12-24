@@ -1,6 +1,6 @@
 {
   "name": "odos-ui",
-  "version": "0.5.28",
+  "version": "0.5.29",
   "private": false,
   "type": "module",
   "main": "lib/umd/odos-ui.umd.js",
