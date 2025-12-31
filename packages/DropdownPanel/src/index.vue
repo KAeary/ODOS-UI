@@ -4,6 +4,7 @@
     <div
       v-if="visible"
       class="odos-autopopup-panel"
+      ref="panelRef"
       :style="panelStyle"
       role="dialog"
       aria-modal="false"
@@ -35,7 +36,7 @@ const props = defineProps<{
   maxWidth?: string | number
   maxHeight?: string | number
   fitWidth?: boolean
-  contentClass?: string
+  trigger?: 'hover' | 'click'
 }>()
 
 const visible = computed(() => props.modelValue)
@@ -46,8 +47,12 @@ const placement = computed(() => props.placement ?? 'bottom-start')
 const offsetX = computed(() => props.offsetX ?? 0)
 const offsetY = computed(() => props.offsetY ?? 4)
 const fitWidth = computed(() => props.fitWidth ?? true)
+const triggerMode = computed(() => props.trigger ?? 'click')
 
 const slotTriggerRef = ref<HTMLElement | null>(null)
+const panelRef = ref<HTMLElement | null>(null)
+const isTriggerHover = ref(false)
+const isPanelHover = ref(false)
 
 const getTriggerEl = (): HTMLElement | null => {
   const el = props.triggerEl
@@ -112,11 +117,66 @@ const onKeydown = () => {
   if (!visible.value) return
 }
 
+let cleanupListeners: (() => void) | null = null
+const checkHoverClose = () => {
+  if (triggerMode.value === 'hover' && !isTriggerHover.value && !isPanelHover.value) {
+    close()
+  }
+}
+const setupTriggerListeners = () => {
+  if (cleanupListeners) {
+    cleanupListeners()
+    cleanupListeners = null
+  }
+  if (props.triggerEl) return
+  const el = slotTriggerRef.value
+  if (!el) return
+  if (triggerMode.value === 'click') {
+    const onClick = () => emit('update:modelValue', !visible.value)
+    el.addEventListener('click', onClick)
+    cleanupListeners = () => {
+      el.removeEventListener('click', onClick)
+    }
+  } else {
+    const onEnterTrigger = () => {
+      isTriggerHover.value = true
+      emit('update:modelValue', true)
+    }
+    const onLeaveTrigger = () => {
+      isTriggerHover.value = false
+      setTimeout(checkHoverClose, 0)
+    }
+    el.addEventListener('mouseenter', onEnterTrigger)
+    el.addEventListener('mouseleave', onLeaveTrigger)
+    const panel = panelRef.value
+    const onEnterPanel = () => {
+      isPanelHover.value = true
+    }
+    const onLeavePanel = () => {
+      isPanelHover.value = false
+      setTimeout(checkHoverClose, 0)
+    }
+    if (panel) {
+      panel.addEventListener('mouseenter', onEnterPanel)
+      panel.addEventListener('mouseleave', onLeavePanel)
+    }
+    cleanupListeners = () => {
+      el.removeEventListener('mouseenter', onEnterTrigger)
+      el.removeEventListener('mouseleave', onLeaveTrigger)
+      if (panel) {
+        panel.removeEventListener('mouseenter', onEnterPanel)
+        panel.removeEventListener('mouseleave', onLeavePanel)
+      }
+    }
+  }
+}
+
 onMounted(() => {
   window.addEventListener('keydown', onKeydown)
   window.addEventListener('resize', onViewport)
   window.addEventListener('scroll', onViewport, true)
   document.addEventListener('pointerdown', onPointerDown, true)
+  setupTriggerListeners()
 })
 
 onBeforeUnmount(() => {
@@ -124,6 +184,7 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', onViewport)
   window.removeEventListener('scroll', onViewport, true)
   document.removeEventListener('pointerdown', onPointerDown, true)
+  if (cleanupListeners) cleanupListeners()
 })
 
 defineExpose({ close })
@@ -148,6 +209,7 @@ watch(
     if (v) {
       await nextTick()
       updatePosition()
+      if (triggerMode.value === 'hover') setupTriggerListeners()
     }
   }
 )
@@ -156,11 +218,17 @@ watch(
   () => props.triggerEl,
   () => {
     if (visible.value) updatePosition()
+    setupTriggerListeners()
   }
 )
 
 watch(slotTriggerRef, () => {
   if (visible.value) updatePosition()
+  setupTriggerListeners()
+})
+
+watch([panelRef, triggerMode], () => {
+  setupTriggerListeners()
 })
 </script>
 
@@ -173,13 +241,4 @@ watch(slotTriggerRef, () => {
   border: 1px solid #e5e6eb;
 }
 
-.odos-autopopup-close {
-  position: absolute;
-  top: 8px;
-  right: 12px;
-  cursor: pointer;
-  color: #666;
-  font-size: 18px;
-  line-height: 24px;
-}
 </style>

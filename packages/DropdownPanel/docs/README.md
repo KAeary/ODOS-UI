@@ -5,7 +5,7 @@ import TriggerDemo from './trigger.vue'
 
 # DropdownPanel 下拉面板
 
-根据内容自动调整大小的“下拉面板”，锚定到触发元素附近，无遮罩。支持外部点击关闭、自定义关闭按钮，且可通过 v-model 控制显示/隐藏。
+根据内容自动调整大小的“下拉面板”，锚定到触发元素附近，无遮罩。支持外部点击关闭，且可通过 v-model 控制显示/隐藏。
 
 ## 基础用法
 
@@ -34,7 +34,7 @@ import TriggerDemo from './trigger.vue'
 | maxWidth | 面板最大宽度 | string \| number | auto |
 | maxHeight | 面板最大高度 | string \| number | 50vh |
 | fitWidth | 宽度是否适配触发元素 | boolean | true |
-| contentClass | 面板内容容器的自定义类名 | string | '' |
+| trigger | 触发方式（仅插槽模式） | 'hover' \| 'click' | click |
 
 ## Slots
 
