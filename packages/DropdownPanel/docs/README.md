@@ -21,6 +21,8 @@ import TriggerDemo from './trigger.vue'
   <TriggerDemo />
 </Preview>
 
+在插槽模式下可以不传 `v-model`，通过 `trigger="hover|click"` 控制显示与隐藏。
+
 ## Props
 
 | 属性 | 描述 | 类型 | 默认值 |

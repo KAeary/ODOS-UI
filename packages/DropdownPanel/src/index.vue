@@ -26,7 +26,7 @@ const emit = defineEmits<{
 }>()
 
 const props = defineProps<{
-  modelValue: boolean
+  modelValue?: boolean
   // 支持传入原生元素或Vue组件实例（从其$el解析）
   triggerEl?: HTMLElement | (ComponentPublicInstance & { $el?: HTMLElement }) | null
   placement?: 'bottom-start' | 'bottom-end' | 'top-start' | 'top-end'
@@ -39,7 +39,16 @@ const props = defineProps<{
   trigger?: 'hover' | 'click'
 }>()
 
-const visible = computed(() => props.modelValue)
+const controlled = computed(() => props.modelValue !== undefined)
+const innerVisible = ref(false)
+const visible = computed(() => (controlled.value ? !!props.modelValue : innerVisible.value))
+const setVisible = (v: boolean) => {
+  if (controlled.value) {
+    emit('update:modelValue', v)
+  } else {
+    innerVisible.value = v
+  }
+}
 const zIndex = computed(() => props.zIndex ?? 1000)
 
 const panelStyle = ref<Record<string, string>>({})
@@ -109,7 +118,7 @@ const updatePosition = () => {
 }
 
 const close = () => {
-  emit('update:modelValue', false)
+  setVisible(false)
   emit('close')
 }
 
@@ -132,7 +141,7 @@ const setupTriggerListeners = () => {
   const el = slotTriggerRef.value
   if (!el) return
   if (triggerMode.value === 'click') {
-    const onClick = () => emit('update:modelValue', !visible.value)
+    const onClick = () => setVisible(!visible.value)
     el.addEventListener('click', onClick)
     cleanupListeners = () => {
       el.removeEventListener('click', onClick)
@@ -140,7 +149,7 @@ const setupTriggerListeners = () => {
   } else {
     const onEnterTrigger = () => {
       isTriggerHover.value = true
-      emit('update:modelValue', true)
+      setVisible(true)
     }
     const onLeaveTrigger = () => {
       isTriggerHover.value = false
@@ -204,7 +213,7 @@ const onPointerDown = (e: Event) => {
 }
 
 watch(
-  () => props.modelValue,
+  () => visible.value,
   async (v) => {
     if (v) {
       await nextTick()
