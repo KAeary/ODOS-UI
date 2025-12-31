@@ -1,6 +1,6 @@
 <template>
   <div>
-    <odos-dropdown-panel v-model="visible" placement="bottom-end" trigger="hover">
+    <odos-dropdown-panel placement="bottom-end" trigger="hover">
       <template #trigger>
         <odos-button type="default">作为触发元素（hover 打开）</odos-button>
       </template>
@@ -9,10 +9,3 @@
     </odos-dropdown-panel>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-const visible = ref(false)
-</script>
-
-<style scoped></style>
