@@ -1,4 +1,5 @@
 <template>
+  <span ref="slotTriggerRef"><slot name="trigger" /></span>
   <teleport to="body">
     <div
       v-if="visible"
@@ -16,15 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-  computed,
-  onMounted,
-  onBeforeUnmount,
-  watch,
-  ref,
-  nextTick,
-  type ComponentPublicInstance
-} from 'vue'
+import { computed, onMounted, onBeforeUnmount, watch, ref, nextTick, type ComponentPublicInstance } from 'vue'
 
 const emit = defineEmits<{
   (e: 'update:modelValue', v: boolean): void
@@ -54,12 +47,15 @@ const offsetX = computed(() => props.offsetX ?? 0)
 const offsetY = computed(() => props.offsetY ?? 4)
 const fitWidth = computed(() => props.fitWidth ?? true)
 
+const slotTriggerRef = ref<HTMLElement | null>(null)
+
 const getTriggerEl = (): HTMLElement | null => {
-  const el = props.triggerEl as any
-  if (!el) return null
-  if (el instanceof HTMLElement) return el
-  if (el.$el && el.$el instanceof HTMLElement) return el.$el
-  return null
+  const el = props.triggerEl
+  if (el) {
+    if (el instanceof HTMLElement) return el
+    if ('$el' in el && el.$el && el.$el instanceof HTMLElement) return el.$el
+  }
+  return slotTriggerRef.value
 }
 
 const updatePosition = () => {
@@ -100,7 +96,6 @@ const updatePosition = () => {
     }
     if (width) style.minWidth = `${Math.round(width)}px`
   } else {
-    // fallback 到视口中部
     style.left = '50%'
     style.top = '50%'
     style.transform = 'translate(-50%, 0)'
@@ -142,7 +137,6 @@ const onPointerDown = (e: Event) => {
   const target = e.target as Node | null
   const panel = document.querySelector('.odos-autopopup-panel')
   const trigger = getTriggerEl()
-  // 如果点击不在面板内且不在触发元素内，则关闭
   if (panel && !panel.contains(target as Node) && trigger && !trigger.contains(target as Node)) {
     close()
   }
@@ -164,6 +158,10 @@ watch(
     if (visible.value) updatePosition()
   }
 )
+
+watch(slotTriggerRef, () => {
+  if (visible.value) updatePosition()
+})
 </script>
 
 <style scoped lang="scss">
