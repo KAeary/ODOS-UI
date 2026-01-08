@@ -37,6 +37,7 @@ const props = defineProps<{
   maxHeight?: string | number
   fitWidth?: boolean
   trigger?: 'hover' | 'click'
+  hoverCloseDelay?: number
 }>()
 // 受控模式下，visible 由 modelValue 控制；非受控模式下，visible 由 innerVisible 控制
 const controlled = computed(() => !!props.modelValue)
@@ -164,6 +165,7 @@ const checkHoverClose = () => {
   }
 }
 // setupTriggerListeners 方法设置触发元素的事件监听器
+const hoverCloseDelay = typeof props.hoverCloseDelay === 'number' ? props.hoverCloseDelay : 300
 const setupTriggerListeners = () => {
   if (cleanupListeners) {
     cleanupListeners()
@@ -185,7 +187,7 @@ const setupTriggerListeners = () => {
     }
     const onLeaveTrigger = () => {
       isTriggerHover.value = false
-      setTimeout(checkHoverClose, 0)
+      setTimeout(checkHoverClose, hoverCloseDelay)
     }
     el.addEventListener('mouseenter', onEnterTrigger)
     el.addEventListener('mouseleave', onLeaveTrigger)
@@ -195,7 +197,7 @@ const setupTriggerListeners = () => {
     }
     const onLeavePanel = () => {
       isPanelHover.value = false
-      setTimeout(checkHoverClose, 0)
+      setTimeout(checkHoverClose, hoverCloseDelay)
     }
     if (panel) {
       panel.addEventListener('mouseenter', onEnterPanel)

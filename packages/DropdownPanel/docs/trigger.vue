@@ -1,6 +1,6 @@
 <template>
   <div>
-    <odos-dropdown-panel placement="bottom-end" trigger="hover">
+    <odos-dropdown-panel placement="bottom-end" trigger="hover" :offsetY="15">
       <template #trigger>
         <odos-button type="default">作为触发元素（hover 打开）</odos-button>
       </template>

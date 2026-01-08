@@ -22,6 +22,19 @@ import TriggerDemo from './trigger.vue'
 </Preview>
 
 在插槽模式下可以不传 `v-model`，通过 `trigger="hover|click"` 控制显示与隐藏。
+支持在 hover 模式下设置关闭延迟，通过 `hoverCloseDelay` 控制（单位毫秒）。
+默认延迟为 `300ms`。
+
+示例（500ms 延迟）：
+
+```vue
+<odos-dropdown-panel trigger="hover" hoverCloseDelay="500">
+  <template #trigger>
+    <odos-button type="default">移入打开，移出 500ms 关闭</odos-button>
+  </template>
+  <div>这里是面板内容</div>
+</odos-dropdown-panel>
+```
 
 ## Props
 
@@ -37,6 +50,7 @@ import TriggerDemo from './trigger.vue'
 | maxHeight | 面板最大高度 | string \| number | 50vh |
 | fitWidth | 宽度是否适配触发元素 | boolean | true |
 | trigger | 触发方式（仅插槽模式） | 'hover' \| 'click' | click |
+| hoverCloseDelay | hover 关闭延迟（仅插槽模式） | number | 300 |
 
 ## Slots
 
